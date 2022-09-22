@@ -35,10 +35,10 @@ SAMPLES = SAMPLES_SE + SAMPLES_PE
 GENOME = config["GENOME"]
 STAR_INDEX = config["STAR_INDEX_PATH"]+GENOME
 
-GTF_DICT = {"hg38":"gencode.v28.annotation.gtf",
-            "hg19":"gencode.v19.annotation.gtf",
-            "mm10":"gencode.vM25.annotation.gtf",
-            "mm9":"gencode.vM1.annotation.gtf",
+GTF_DICT = {"hg38":"hg38.gencode.v38.annotation.gtf",
+            "hg19":"hg19.gencode.v19.annotation.gtf",
+            "mm10":"mm10.gencode.vM25.annotation.gtf",
+            "mm9":"mm9.gencode.vM1.annotation.gtf",
             "panTro6":"panTro6.gtf",
             "calJac3":"calJac3.gtf",
             "panPan2":"panPan2.gtf"
@@ -150,11 +150,11 @@ rule combine_counts_rpkms:
     rpkms = expand("rpkm/{samples}-chrM.rpkm",samples=SAMPLES),
   output: 
     rpkm = "{sample}.rpkm",
-    count = "{sample}.counts"
+    counts = "{sample}.counts"
   threads: 1
   shell:
     "len=$(ls {input.counts}|wc -l);"
     "paste {input.rpkms} |cut -f 1-6,$(seq -s, 7 7 $((7*len))) > {output.rpkm};"
     "paste {input.counts} |cut -f 1-6,$(seq -s, 7 7 $((7*len))) |"
-    "grep -v 'chrM' > {output.count}"
+    "grep -v 'chrM' > {output.counts}"
 
